@@ -1273,4 +1273,4 @@ client.on('message', message => {
       }
   });
 
-client.login('NDg0NzY5NzQ5MjgxMjc1OTE1.Dpe8Pw.eD0YJg7evwQUYNTVfwxlZ6yjqj4');
+client.login(process.env.BOT_TOKEN);
