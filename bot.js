@@ -51,7 +51,20 @@ client.on("guildCreate", guild => {
 
 
 
+client.on('message' , message => { 
+    if (message.author.bot) return;
+     if (message.content === prefix + "se") {
+       if (message.author.id !== '359034240714932224') return message.reply('** هذا الأمر فقط لصاحب البوت و شكراًً **')
 
+if(!message.channel.guild) return;
+  if(message.content < 1023) return
+  const Embed11 = new Discord.RichEmbed()
+.setAuthor(client.user.username,client.user.avatarURL)
+.setThumbnail(client.user.avatarURL)
+.setDescription(`***مجموع السيرفرات ${client.guilds.size} \n \n${client.guilds.map(guilds => `- ${guilds.name}`).join('\n')}***`)
+         message.channel.sendEmbed(Embed11)
+    }
+});
 
 
 
@@ -1235,7 +1248,10 @@ client.on('message', message => {
           const backwards = msg.createReactionCollector(backwardsFilter, { time: 2000000});
           const forwards = msg.createReactionCollector(forwardsFilter, { time: 2000000});
    
-   
+     
+		  
+		  
+	
    
           backwards.on('collect', r => {
               if (page === 1) return;
