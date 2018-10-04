@@ -704,6 +704,202 @@ client.on('message' , message => {
 
 
 
+
+
+client.on('message', msg => {
+ if (msg.content.startsWith(prefix + 'dm')) {
+      let args = msg.content.split(' ').slice(1)
+      if (!args[0]) return msg.reply(`**منشن الشخص اولا**`)
+      if (!args[1]) return msg.reply(`**ما هي الرساله المطلوب ارسالها**`)
+      let Emoko = msg.mentions.members.first()
+      if (!Emoko) return msg.reply(`**يجب تحديد الشخص**`)
+      let EmokoEmbed = new Discord.RichEmbed()
+      .setTitle(`**رسالة جديدة:new_moon_with_face: **`)
+      .setDescription(args.join(" "))
+
+      client.users.get(`${Emoko.id}`).send(EmokoEmbed)
+      msg.reply(`**تم ارسال الرساله**`)
+    }
+});
+
+
+
+
+ var filter = m => m.author.id === message.author.id;
+  if(message.content.startsWith(prefix + "giveaway")) {
+
+    if(!message.guild.member(message.author).hasPermission('MANAGE_GUILD')) return message.channel.send(':heavy_multiplication_x:| **يجب أن يكون لديك خاصية التعديل على السيرفر**');
+    message.channel.send(`:eight_pointed_black_star:| **Send Name channel For the Giveaway**`).then(msg => {
+      message.channel.awaitMessages(filter, {
+        max: 1,
+        time: 20000,
+        errors: ['time']
+      }).then(collected => {
+        let room = message.guild.channels.find('name' , collected.first().content);
+        if(!room) return message.channel.send(':heavy_multiplication_x:| **i Found It :(**');
+        room = collected.first().content;
+        collected.first().delete();
+        msg.edit(':eight_pointed_black_star:| **Time For The Giveaway**').then(msg => {
+          message.channel.awaitMessages(filter, {
+            max: 1,
+            time: 20000,
+            errors: ['time']
+          }).then(collected => {
+            if(isNaN(collected.first().content)) return message.channel.send(':heavy_multiplication_x:| **The Time Be Nambers `` Do the Commend Agin``**');
+            duration = collected.first().content * 60000;
+            collected.first().delete();
+            msg.edit(':eight_pointed_black_star:| **Now send The Present **').then(msg => {
+              message.channel.awaitMessages(filter, {
+                max: 1,
+                time: 20000,
+                errors: ['time']
+              }).then(collected => {
+                title = collected.first().content;
+                collected.first().delete();
+                msg.delete();
+                message.delete();
+                try {
+                  let giveEmbed = new Discord.RichEmbed()
+                  .setDescription(`**${title}** \nReact With 🎉 To Enter! \nTime remaining : ${duration / 60000} **Minutes**\n **Created at :** ${hours}:${minutes}:${seconds} ${suffix}`)
+                  .setFooter(message.author.username, message.author.avatarURL);
+                  message.guild.channels.find("name" , room).send(' :heavy_check_mark: **Giveaway Created** :heavy_check_mark:' , {embed: giveEmbed}).then(m => {
+                     let re = m.react('🎉');
+                     setTimeout(() => {
+                       let users = m.reactions.get("🎉").users;
+                       let list = users.array().filter(u => u.id !== m.author.id !== client.user.id);
+                       let gFilter = list[Math.floor(Math.random() * list.length) + 0]
+                       let endEmbed = new Discord.RichEmbed()
+                       .setAuthor(message.author.username, message.author.avatarURL)
+                       .setTitle(title)
+                       .addField('Giveaway Ended !🎉',`Winners : ${gFilter} \nEnded at :`)
+                       .setTimestamp()
+					 m.edit('** 🎉 GIVEAWAY ENDED 🎉**' , {embed: endEmbed});
+					message.guild.channels.find("name" , room).send(`**Congratulations ${gFilter}! You won The \`${title}\`**` , {embed: {}})
+                     },duration);
+                   });
+                } catch(e) {
+                message.channel.send(`:heavy_multiplication_x:| **i Don't Have Prem**`);
+                  console.log(e);
+                }
+              });
+            });
+          });
+        });
+      });
+    });
+  }
+});
+
+
+client.on("message", async message => {
+  if(message.author.bot) return;
+  if(message.channel.type === "dm") return;
+
+  let messageArray = message.content.split (" ");
+  let cmd = messageArray[0];
+  let args = messageArray.slice(1);
+
+
+
+    if(cmd === `${prefix}kick`){
+
+
+
+      let kUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+      if(!kUser) return message.channel.send("فين العضو ؟");
+      let kReason = args.join(" ").slice(22);
+      if(!message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send("ما عندك برمشن");
+      if(kUser.hasPermission("MANAGE_CHANNELS")) return message.channel.send("ما تقدر تسوي كيك للأدمين")
+
+      let kickEmbed = new Discord.RichEmbed()
+      .setDescription("k")
+      .setColor("#e56b00")
+      .addField("تم طرد", `${kUser} with ID ${kUser.id}`)
+      .addField("تم الطرد من قبل", `<@${message.author.id}> with the id ${message.author.id}`)
+      .addField("تم الطرد في", message.channel)
+      .addField("الوقت", message.createdAt)
+      .addField("السبب", kReason);
+
+      let kickChannel = message.guild.channels.find('name', 'log');
+      if(!kickChannel) return message.channel.send("لم اجد روم ال kick-ban");
+
+      message.guild.member(kUser).kick(kReason)
+      kickChannel.send(kickEmbed);
+    }
+    });
+
+client.on("message", async message => {
+      if(message.author.bot) return;
+      if(message.channel.type === "dm") return;
+	
+      let messageArray = message.content.split (" ");
+      let cmd = messageArray[0];
+      let args = messageArray.slice(1);
+
+
+
+        if(cmd === `${prefix}ban`){
+
+
+
+          let kUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+          if(!kUser) return message.channel.send("فين العضو ؟");
+          let kReason = args.join(" ").slice(22);
+          if(!message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send("ما عندك برمشن");
+          if(kUser.hasPermission("MANAGE_CHANNELS")) return message.channel.send("ما تقدر تسوي بان للأدمين")
+
+          let banEmbed = new Discord.RichEmbed()
+          .setDescription("~Ban~")
+          .setColor("#8e0505")
+          .addField("Banned User", `${bUser} with ID ${bUser.id}`)
+          .addField("Banned By", `<@${message.author.id}> with the id ${message.author.id}`)
+          .addField("Banned In", message.channel)
+          .addField("Time", message.createdAt)
+          .addField("Reason", kReason);
+
+          let banChannel = message.guild.channels.find('name', 'log');
+          if(!banChannel) return message.channel.send("لم اجد روم kick-ban");
+
+          message.guild.member(bUser).kick(bReason)
+          banChannel.send(banEmbed);
+        }
+        });
+
+client.on('message' , message => {
+  if(message.author.bot) return;
+  if(message.content.startsWith(prefix + "send")) {
+    let args = message.content.split(" ").slice(1);
+
+
+    let suggestmessage = args.join(" ").slice(22);
+    let suggestchannel = message.mentions.channels.first();
+
+    if (!suggestchannel) {
+        return message.reply("Please Mention the channel!")
+    }
+
+    if (!suggestmessage) {
+        return message.reply("Plase Give Text To send Channel!")
+    
+         
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /////////////////////////
 ////////////////////////
 //////////////////////
@@ -995,8 +1191,13 @@ client.on('message', message => {
      『=bc / رسالة جماعية الى كل اعضاء السيرفر』
      『=Mute ' , 'الاعطاء ميوت مع الزمن 』
      『=UnMute ' , 'لفك ميوت شات』
+     『=kick ' , 'لطرد عضو من السرفر 』
+     『=ban ' , 'لحظر عضو من السرفر 』
      『=cc ' , 'لانشاء 140 لون』
+     『=giveaway ' , 'لصناعه جيفاوي』
      『=clear ' , 'لمسح الشات حد اقصى 200رساله』
+     『=dm ' , 'لارسال رساله لشخص بالبوت』
+     『=send ' , ' لارسال رساله بالبوت في روم』
      『=bcall ' , 'لارسال رساله لكل السرفرات الي تستخدم البوت』
      **
         `,`
@@ -1056,5 +1257,5 @@ client.on('message', message => {
       }
   });
 
-client.login('NDg0NzY5NzQ5MjgxMjc1OTE1.DnJUXg.ih3mrkCXGLGsIydvGC6hvuQOmxI');
+client.login(procces.env.token);
 
