@@ -1273,5 +1273,5 @@ client.on('message', message => {
       }
   });
 
-client.login(procces.env.BOT_TOKEN);
+client.login(token);
 
