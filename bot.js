@@ -213,7 +213,7 @@ client.on('message' , message => {
   client.on('message', message => {
 	if (true) {
   if (message.content === '=invite') {
-		message.author.send('  https://discordapp.com/api/oauth2/authorize?client_id=485465884513533953&permissions=8&scope=bot  |  تفضل ربط البوت     ').catch(e => console.log(e.stack));
+		message.author.send('  https://discordapp.com/api/oauth2/authorize?client_id=484769749281275915&permissions=8&scope=bot  |  تفضل ربط البوت     ').catch(e => console.log(e.stack));
 	  }
 	 }
 	});
